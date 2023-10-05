@@ -1,0 +1,12 @@
+/* popup-content.component.css */
+.popup {
+    position: absolute;
+    z-index: 1;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    /* Add a pointer cursor to indicate clickability */
+}

@@ -1,0 +1,26 @@
+.header{
+   
+        position: relative;
+        width: 100%;
+      
+      
+        background-color: rgba(0, 0, 0, 0.5);
+        font-family: 'Helvetica Neue', Helvetica, sans-serif;
+        line-height: normal;
+        z-index: 99999;
+}
+
+.header .content {
+ 
+    padding: 10px;
+}
+
+.header .content .title {
+    
+    margin: 0 0 5px 0;
+    line-height: normal;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #fff;
+}

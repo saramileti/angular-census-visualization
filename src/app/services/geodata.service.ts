@@ -6,9 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class GeodataService {
-  getCountryBorders() {
-    throw new Error('Method not implemented.');
-  }
+ 
   constructor(private http: HttpClient) {}
 
   getGeoJSON(): Observable<any> {

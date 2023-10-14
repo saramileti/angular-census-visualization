@@ -13,6 +13,18 @@ export class PopupComponent {
     public data: any
   ) {}
 
+
+ closePopup() {
+    const popup = document.querySelector('.infowindow') as HTMLElement | null;
+    if (popup) {
+      popup.style.display = 'none';
+    }
+  }
+  
+  
+  
+  
+
   openChart(): void {
     // Handle the button click event here
     console.log('Opening chart for:', this.data.feature.properties.County);

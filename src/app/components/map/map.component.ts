@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
 import { GeodataService } from 'src/app/services/geodata.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,30 +9,22 @@ import { PopupComponent } from '../popup/popup.component';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements AfterViewInit, OnInit {
-  private map!: L.Map;
+export class MapComponent implements AfterViewInit {
+  private map!: any;
 
   constructor(
     private geodataservice: GeodataService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
-
-  ngOnInit(): void {
-    // Initialize Chart.js data (you can replace this with your data)
-    // ...
-  }
 
   openDialog(feature: any) {
     const dialogRef = this.dialog.open(PopupComponent, {
       data: { feature },
-      
     });
+
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
-
-
-
-  
   private getColorBasedOnSV(svIndex: number): string {
     if (svIndex >= 0.9 && svIndex <= 1) {
       return '#006837';
@@ -59,32 +51,25 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
-
-  openDetailsDialog(){
-    
-
-  }
-
   private initMap(geojsonData: any): void {
-    this.map = L.map('map', {
-      center: [40.7128, -74.0060],
-      zoom: 8,
-      layers: [
-        L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          minZoom: 3,
-        }),
-      ],
-    });
+    if (!this.map)
+      this.map = L.map('map', {
+        center: [40.7128, -74.006],
+        zoom: 8,
+        layers: [
+          L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 3,
+          }),
+        ],
+      });
 
     const geojsonLayer = L.geoJSON(geojsonData, {
       style: (feature: any) => {
         // Access the SV index from your GeoJSON feature properties
         const svIndex = feature.properties.SV_Index2;
 
-        // Use getColorBasedOnSV to determine the fill color
         const fillColor = this.getColorBasedOnSV(svIndex);
-
         return {
           fillColor: fillColor,
           color: '#796756', // outline color
@@ -94,7 +79,10 @@ export class MapComponent implements AfterViewInit, OnInit {
         };
       },
 
-      onEachFeature: (feature: any, layer:any) => {
+      onEachFeature: (feature: any, layer: any) => {
+        const specificZoneData = (e: any) => {
+          this.geodataservice.clickedZoneData = e.target.feature.properties;
+        };
         // Function to create the popup content for hovering
         const createHoverPopup = () => {
           return `
@@ -107,27 +95,15 @@ export class MapComponent implements AfterViewInit, OnInit {
     `;
         };
 
-        // Function to create the popup content for clicking
-        
-
-        // Bind the initial hover popup content to the layer
         layer.bindPopup(createHoverPopup(), {
           maxWidth: 400, // Set the maximum width of the popup
         });
 
         // Add a click event to open the click popup
         layer.on('click', () => {
-          layer
-          .bindPopup
-             this.openDialog(feature);
-          
-         
-
+          layer.bindPopup;
+          this.openDialog(feature);
         });
-    
-        // ...
-     
-
         // Add a mouseover event to open the hover popup when hovering over a feature
         layer.on('mouseover', () => {
           layer
@@ -135,6 +111,10 @@ export class MapComponent implements AfterViewInit, OnInit {
               maxWidth: 400, // Set the maximum width of the popup
             })
             .openPopup();
+        });
+
+        layer.on('click', (e: any) => {
+          specificZoneData(e);
         });
 
         //Add a mouseout event to close the popup when moving the mouse away from the feature
@@ -148,11 +128,74 @@ export class MapComponent implements AfterViewInit, OnInit {
     geojsonLayer.addTo(this.map);
   }
 
-  ngAfterViewInit(): void {
-    this.geodataservice.getGeoJSON().subscribe((data) => {
-      this.initMap(data);
-    });
+  private displayLegend() {
+    let legend = new L.Control({ position: 'bottomright' });
+    legend.onAdd = function (map) {
+      let div = L.DomUtil.create('div', 'legend');
+      let labels = ['<strong>SV Indexes</strong>'];
+      let indexes = [
+        '0-0.1',
+        '0.1-0.2',
+        '0.2-0.3',
+        '0.3-0.4',
+        '0.4-0.5',
+        '0.5-0.6',
+        '0.6-0.7',
+        '0.7-0.8',
+        '0.8-0.9',
+        '0.9-1',
+      ];
+      let colors = [
+        '#71001B',
+        '#71001B',
+        '#D73027',
+        '#F46D43',
+        '#FDAE61',
+        '#FEE9AE',
+        '#E4F4AE',
+        '#A6D96A',
+        '#66BD63',
+        '#1A9850',
+        '#006837',
+      ];
+      let style = [
+        '<style> ' +
+          '' +
+          '.legend {\n' +
+          '  padding: 6px 8px;\n' +
+          '  font: 14px Arial, Helvetica, sans-serif;\n' +
+          '  background: white;\n' +
+          // '  background: rgba(255, 255, 255, 0.8);\n' +
+          '  line-height: 20px;\n' +
+          '  color: #555;\n' +
+          '}' +
+          ' </style>',
+      ];
+
+      for (let i = 0; i < indexes.length; i++) {
+        div.innerHTML += labels.push(
+          '<span class="circle" style="background:' +
+            colors[i] +
+            '"><mat-icon>O</mat-icon></span> ' +
+            (indexes[i] ? indexes[i] : '+')
+        );
+      }
+      div.innerHTML = labels.join('<br>') + style;
+      return div;
+    };
+    legend.addTo(this.map);
   }
+
+  ngAfterViewInit(): void {
+    if (!this.map) {
+      // Initialize the map only if it hasn't been initialized before
+      this.geodataservice.getGeoJSON().subscribe((data) => {
+        this.initMap(data);
+        this.displayLegend();
+      });
+    }
+  }
+  // this.geodataservice.getGeoJSON().subscribe((data) => {
+  //   this.initMap(data);
+  // });
 }
-
-

@@ -1,0 +1,12 @@
+.row {
+  display: flex;
+  max-height: 700px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.column {
+  flex: 50%;
+}

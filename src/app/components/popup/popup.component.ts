@@ -1,5 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { GeodataService } from 'src/app/services/geodata.service';
 
 @Component({
   selector: 'app-popup-content',
@@ -7,27 +10,25 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./popup.component.css'],
 })
 export class PopupComponent {
+  notifier = new Subject();
+
   constructor(
+    public geoData: GeodataService,
+    private router: Router,
     public dialogRef: MatDialogRef<PopupComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: any
   ) {}
 
-
- closePopup() {
-    const popup = document.querySelector('.infowindow') as HTMLElement | null;
-    if (popup) {
-      popup.style.display = 'none';
+  @HostListener('click', ['$event'])
+  onClick(event: any) {
+    let id = event.target.id;
+    if (id == 'chartBtn') {
+      this.openChart();
     }
   }
-  
-  
-  
-  
-
-  openChart(): void {
-    // Handle the button click event here
-    console.log('Opening chart for:', this.data.feature.properties.County);
-    this.dialogRef.close();
+  openChart() {
+    
+    this.router.navigate([{ outlets: { chart: ['chart'] } }]);
   }
 }

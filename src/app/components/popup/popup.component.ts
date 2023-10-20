@@ -1,8 +1,7 @@
 import { Component, HostListener, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { GeodataService } from 'src/app/services/geodata.service';
 
 @Component({
   selector: 'app-popup-content',
@@ -10,16 +9,18 @@ import { GeodataService } from 'src/app/services/geodata.service';
   styleUrls: ['./popup.component.css'],
 })
 export class PopupComponent {
+  // Create a subject for notifying changes
   notifier = new Subject();
 
   constructor(
-    public geoData: GeodataService,
+    // Inject the Angular Router for navigation
     private router: Router,
-    public dialogRef: MatDialogRef<PopupComponent>,
+    // Inject data passed into the dialog
     @Inject(MAT_DIALOG_DATA)
     public data: any
   ) {}
 
+  // Define a click event listener for the component
   @HostListener('click', ['$event'])
   onClick(event: any) {
     let id = event.target.id;
@@ -27,8 +28,8 @@ export class PopupComponent {
       this.openChart();
     }
   }
+  // Method to open the chart by navigating to the 'chart' outlet
   openChart() {
-    
     this.router.navigate([{ outlets: { chart: ['chart'] } }]);
   }
 }

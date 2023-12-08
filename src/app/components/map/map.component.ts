@@ -12,6 +12,7 @@ import { PopupComponent } from '../popup/popup.component';
 export class MapComponent implements AfterViewInit {
   // Private property to store the Leaflet map instance
   private map!: any;
+  // legendData!: any;
 
   constructor(
     private geodataservice: GeodataService,
@@ -26,8 +27,9 @@ export class MapComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe((result) => {});
   }
   // Method to determine the color based on a given SV index value.
-  private getColorBasedOnSV(svIndex: number): string {
+  getColorBasedOnSV(svIndex: number) {
     // This function maps SV index values to specific colors.
+
     if (svIndex >= 0.9 && svIndex <= 1) {
       return '#006837';
     } else if (svIndex >= 0.8 && svIndex <= 0.9) {
@@ -58,7 +60,7 @@ export class MapComponent implements AfterViewInit {
       this.map = L.map('map', {
         // Initial map center coordinates
         center: [40.7128, -74.006],
-        zoom: 8,
+        zoom: 10,
         layers: [
           L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -136,20 +138,20 @@ export class MapComponent implements AfterViewInit {
     // Create a new Leaflet control positioned at the bottom right
     let legend = new L.Control({ position: 'bottomright' });
     // Define the function to execute when the legend control is added to the map
-    legend.onAdd = function (map) {
-      let div = L.DomUtil.create('div', 'legend');
-      let labels = ['<strong>SV Indexes</strong>'];
+    legend.onAdd = function () {
+      let div = L.DomUtil.create('div', ' legend bullet');
+      let labels = [];
       let indexes = [
-        '0-0.1',
-        '0.1-0.2',
-        '0.2-0.3',
-        '0.3-0.4',
-        '0.4-0.5',
-        '0.5-0.6',
-        '0.6-0.7',
-        '0.7-0.8',
-        '0.8-0.9',
-        '0.9-1',
+        '0.9 TO 1',
+        '0.8 TO 0.9',
+        '0.7 TO 0.8',
+        '0.6 TO 0.7',
+        '0.5 TO 0.6',
+        '0.4 TO 0.5',
+        '0.3 TO 0.4',
+        '0.2 TO 0.3',
+        '0.1 TO 0.2',
+        '0   TO 0.1',
       ];
       let colors = [
         '#71001B',
@@ -168,21 +170,25 @@ export class MapComponent implements AfterViewInit {
         '<style> ' +
           '' +
           '.legend {\n' +
-          '  padding: 6px 8px;\n' +
-          '  font: 14px Arial, Helvetica, sans-serif;\n' +
+          'position: relative;\n' +
+          'right: auto;\n' +
+          'bottom: auto;\n' +
+          'border: 2px;\n' +
+          'margin: 0;\n' +
+          'border-radius: 0px;\n' +
+          'padding: 13px 15px 14px 10px; \n' +
           '  background: white;\n' +
-          '  line-height: 20px;\n' +
-          '  color: #555;\n' +
           '}' +
+          '' +
           ' </style>',
       ];
       // Loop through the SV index ranges and their colors to build the legend content
       for (let i = 0; i < indexes.length; i++) {
         // Create legend entries with colored circles and SV index ranges
         div.innerHTML += labels.push(
-          '<span class="circle" style="background:' +
+          '<span style="background:' +
             colors[i] +
-            '"><mat-icon>O</mat-icon></span> ' +
+            ' ; float: left; margin: 3px 5px 0 0; width: 3px; height: 3px; border-radius: 50%; padding: 2px; border: 1px solid  rgba(0, 0, 0, 0.2);"></span> ' +
             (indexes[i] ? indexes[i] : '+')
         );
       }
@@ -198,6 +204,7 @@ export class MapComponent implements AfterViewInit {
       // Initialize the map only if it hasn't been initialized before
       this.geodataservice.getGeoJSON().subscribe((data) => {
         this.initMap(data);
+        // this.displayLegend = this.getLegendData();
         this.displayLegend();
       });
     }

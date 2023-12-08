@@ -9,6 +9,7 @@ import { PopupComponent } from './components/popup/popup.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ChartComponent } from './components/chart/chart.component';
+import { LegendComponent } from './components/legend/legend.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ChartComponent } from './components/chart/chart.component';
     HeaderComponent,
     PopupComponent,
     ChartComponent,
+    LegendComponent,
   ],
   imports: [
     BrowserModule,

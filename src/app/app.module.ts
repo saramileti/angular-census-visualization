@@ -2,30 +2,20 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MapComponent } from './components/map/map.component';
-import { PopupComponent } from './components/popup/popup.component';
-import { HeaderComponent } from './components/header/header.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ChartComponent } from './components/chart/chart.component';
-import { LegendComponent } from './components/legend/legend.component';
+import { MapModule } from './components/map/map.module';
+import { ChartModule } from './components/chart/chart.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MapComponent,
-    HeaderComponent,
-    PopupComponent,
-    ChartComponent,
-    LegendComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     MatDialogModule,
     BrowserAnimationsModule,
+    MapModule,
+    ChartModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

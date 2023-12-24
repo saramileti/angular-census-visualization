@@ -10,3 +10,17 @@ h2 {
 .column {
   flex: 50%;
 }
+
+.column canvas {
+  height: 400px;
+  width: 300px;
+}
+
+.column canvas #barchart {
+  height: 250px;
+}
+
+canvas #barchart {
+  margin-top: 10px;
+  box-sizing: border-box;
+}

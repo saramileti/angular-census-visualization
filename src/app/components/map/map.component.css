@@ -4,14 +4,19 @@
   left: 0;
   right: 0;
   bottom: 0;
+
+
 }
 
 .map-frame {
   height: 100%;
+
+
 }
 
 #map {
   height: 100%;
+  /* background-color: #DDDDDD; */
 }
 
 .header {
@@ -24,7 +29,7 @@
 }
 
 .header .content {
-  padding: 5px;
+  padding: 14px;
 }
 
 .header .content .title {
@@ -32,6 +37,8 @@
   line-height: normal;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 15px;
   color: #fff;
 }
+
+

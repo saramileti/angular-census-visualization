@@ -1,6 +1,7 @@
 import { GeodataService } from 'src/app/services/geodata.service';
 import { Chart, registerables } from 'chart.js';
-import { Component, OnInit } from '@angular/core';
+import { Component,  Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA} from '@angular/material/dialog';
 Chart.register(...registerables);
 
 @Component({
@@ -13,7 +14,8 @@ export class ChartComponent implements OnInit {
   indexColor: any[] = [];
   displayedData: any;
 
-  constructor(private geoData: GeodataService) {}
+  constructor(private geoData: GeodataService, @Inject(MAT_DIALOG_DATA)
+  public data: any,) {}
 
   ngOnInit(): void {
     // Get the feature data from the route parameters
@@ -83,4 +85,6 @@ export class ChartComponent implements OnInit {
       return '#AF7843';
     }
   }
-}
+  }
+  
+
